@@ -324,7 +324,6 @@ def open_dest(dest: str) -> Tuple[str, Callable[[str, Union[bytes, str]], None],
 #@click.option('--transform', help='Input crop/resize mode', type=click.Choice(['center-crop', 'center-crop-wide']))
 #@click.option('--resolution', help='Output resolution (e.g., \'512x512\')', metavar='WxH', type=parse_tuple)
 def convert_dataset(
-    ctx: click.Context,
     source: str,
     dest: str,
     max_images: Optional[int],
@@ -393,7 +392,7 @@ def convert_dataset(
     PIL.Image.init() # type: ignore
 
     if dest == '':
-        ctx.fail('--dest output filename or directory must not be an empty string')
+        print('--dest output filename or directory must not be an empty string')
 
     num_files, input_iter = open_dataset(source, max_images=max_images)
     archive_root_dir, save_bytes, close_dest = open_dest(dest)
