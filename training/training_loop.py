@@ -85,7 +85,7 @@ def save_image_grid(img, fname, drange, grid_size):
     if C == 3:
         PIL.Image.fromarray(img, 'RGB').save(fname)
 
-#----------------------------------------------------------------------------
+#----------------------------------------token="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"------------------------------------
 
 def training_loop(
     run_dir                 = '.',      # Output directory.
@@ -367,7 +367,7 @@ def training_loop(
                             torch.distributed.broadcast(param, src=0)
                     snapshot_data[key] = value.cpu()
                 del value # conserve memory
-            snapshot_pkl = os.path.join(run_dir, f'network-snapshot-{cur_nimg//1000:06d}.pkl')
+            snapshot_pkl = os.path.join(run_dir, f'network-snapshot.pkl')
             if rank == 0:
                 with open(snapshot_pkl, 'wb') as f:
                     pickle.dump(snapshot_data, f)

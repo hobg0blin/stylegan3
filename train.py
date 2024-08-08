@@ -48,17 +48,17 @@ def subprocess_fn(rank, c, temp_dir):
 
 #----------------------------------------------------------------------------
 
-def launch_training(c, desc, outdir, dry_run):
+def launch_training(c, desc, outdir, dry_run, run_id):
     dnnlib.util.Logger(should_flush=True)
 
     # Pick output directory.
     prev_run_dirs = []
-    if os.path.isdir(outdir):
-        prev_run_dirs = [x for x in os.listdir(outdir) if os.path.isdir(os.path.join(outdir, x))]
-    prev_run_ids = [re.match(r'^\d+', x) for x in prev_run_dirs]
-    prev_run_ids = [int(x.group()) for x in prev_run_ids if x is not None]
-    cur_run_id = max(prev_run_ids, default=-1) + 1
-    c.run_dir = os.path.join(outdir, f'{cur_run_id:05d}-{desc}')
+#    if os.path.isdir(outdir):
+#        prev_run_dirs = [x for x in os.listdir(outdir) if os.path.isdir(os.path.join(outdir, x))]
+#    prev_run_ids = [re.match(r'^\d+', x) for x in prev_run_dirs]
+#    prev_run_ids = [int(x.group()) for x in prev_run_ids if x is not None]
+#    cur_run_id = max(prev_run_ids, default=-1) + 1
+    c.run_dir = os.path.join(outdir, f'run_{run_id}')
     assert not os.path.exists(c.run_dir)
 
     # Print options.
@@ -161,7 +161,7 @@ def parse_comma_separated_list(s):
 @click.option('--workers',      help='DataLoader worker processes', metavar='INT',              type=click.IntRange(min=1), default=3, show_default=True)
 @click.option('-n','--dry-run', help='Print training options and exit',                         is_flag=True)
 
-def main(**kwargs):
+def train_model(**kwargs):
     """Train a GAN using the techniques described in the paper
     "Alias-Free Generative Adversarial Networks".
 
@@ -278,11 +278,11 @@ def main(**kwargs):
         desc += f'-{opts.desc}'
 
     # Launch.
-    launch_training(c=c, desc=desc, outdir=opts.outdir, dry_run=opts.dry_run)
+    launch_training(c=c, desc=desc, outdir=opts.outdir, dry_run=opts.dry_run, run_id=opts.run_id)
 
 #----------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    main() # pylint: disable=no-value-for-parameter
+    train() # pylint: disable=no-value-for-parameter
 
 #----------------------------------------------------------------------------
